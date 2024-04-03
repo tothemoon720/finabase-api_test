@@ -1,27 +1,21 @@
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 const express = require("express");
 const client = require("./db");
-const cors = require("cors"); // Add this line to import the 'cors' package
+const cors = require("cors");
 
 const app = express();
-app.use(express.json()); // Add this line to parse JSON data in requests
-
-// Add the cors middleware to allow access from any origin
+app.use(express.json());
 app.use(cors());
 
 // Database connection
-client.connect((err, client) => {
+client.connect(err => {
   if (err) throw err;
   console.log("Connected to the database!");
 });
 
-// API endpoint for retrieving Gainers
+// API endpoints
 app.get("/api/gainers", async (req, res) => {
   try {
-    // Fetch data from Gainers table
     const gainersResult = await client.query("SELECT * FROM Gainers");
-
-    // Send the data as JSON
     res.json(gainersResult.rows);
   } catch (err) {
     console.error("Error fetching Gainers data:", err);
